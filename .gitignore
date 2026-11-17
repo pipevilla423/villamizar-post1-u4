@@ -1,0 +1,15 @@
+
+# Herramientas de DOSBox
+nasm.exe
+ALINK.EXE
+CWSDPMI.EXE
+RSX.EXE
+
+# Archivos generados al compilar
+*.exe
+*.obj
+
+# Archivos temporales
+*.bak
+*.tmp
+*.map
