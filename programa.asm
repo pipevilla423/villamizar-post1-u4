@@ -14,10 +14,13 @@ BITS 16
 ; CONSTANTES
 ; ==========================================
 
+
 CR          EQU 0Dh
 LF          EQU 0Ah
 TERMINADOR  EQU 24h
 ITERACIONES EQU 5
+ANCHO_LINEA EQU 40
+
 
 
 ; ==========================================
@@ -34,7 +37,7 @@ section .data
     ; PASO 7: linea de 40 signos =
     ; TIMES repite el dato durante el ensamblado.
     linea_gruesa:
-        TIMES 40 DB '='
+        TIMES ANCHO_LINEA DB '='
         DB CR, LF, TERMINADOR
 
     etiqueta_a db "Variable A (byte): ", TERMINADOR
