@@ -2,7 +2,7 @@
 ; ==========================================
 ; ARQUITECTURA DE COMPUTADORES
 ; UNIDAD 4 - POST-CONTENIDO
-; PARTE 1 - PASOS 3 Y 4
+; PARTE 1 - PASO 7
 ;
 ; Estudiante: William Felipe Villamizar Soler
 ; Codigo: 1152498
@@ -11,7 +11,7 @@
 BITS 16
 
 ; ==========================================
-; CONSTANTES - EQU
+; CONSTANTES
 ; ==========================================
 
 CR          EQU 0Dh
@@ -31,6 +31,12 @@ section .data
 
     separador db "----------------------------------------", CR, LF, TERMINADOR
 
+    ; PASO 7: linea de 40 signos =
+    ; TIMES repite el dato durante el ensamblado.
+    linea_gruesa:
+        TIMES 40 DB '='
+        DB CR, LF, TERMINADOR
+
     etiqueta_a db "Variable A (byte): ", TERMINADOR
 
     etiqueta_b db "Variable B (dword): ", TERMINADOR
@@ -45,7 +51,6 @@ section .data
     ; Tabla de cinco digitos
     tabla_bytes db 1, 2, 3, 4, 5
 
-    ; Mensaje para identificar la tabla
     etiqueta_tabla db "Tabla de bytes: ", TERMINADOR
 
 
@@ -72,72 +77,45 @@ global main
 ..start:
 main:
 
-    ; Inicializar el segmento de datos
+    ; Inicializar segmento de datos
     mov ax, seg bienvenida
     mov ds, ax
 
 
     ; ======================================
-    ; FUNCION 09h - IMPRIMIR BIENVENIDA
+    ; IMPRIMIR BIENVENIDA
     ; ======================================
 
     mov ah, 09h
     mov dx, bienvenida
     int 21h
 
-    ; Imprimir separador
-    mov ah, 09h
     mov dx, separador
     int 21h
 
 
     ; ======================================
-    ; FUNCION 09h - IMPRIMIR ETIQUETA
+    ; IMPRIMIR ETIQUETA Y CARACTER
     ; ======================================
 
     mov ah, 09h
     mov dx, etiqueta_a
     int 21h
 
-
-    ; ======================================
-    ; FUNCION 02h - IMPRIMIR CARACTER
-    ; ======================================
-
-    ; Cargar el valor de var_byte
+    ; Valor 42 + 30h = ASCII 'Z'
     mov al, [var_byte]
-
-    ; Convertir sumando 30h
-    ; 42 + 48 = 90 = ASCII 'Z'
-    ; Es una demostracion, no convierte
-    ; el numero 42 a texto decimal.
     add al, 30h
 
-    ; Imprimir el caracter almacenado en AL
     mov ah, 02h
     mov dl, al
     int 21h
 
-
-    ; ======================================
-    ; IMPRIMIR SALTO DE LINEA
-    ; ======================================
-
+    ; Nueva linea
     mov ah, 02h
     mov dl, CR
     int 21h
 
-    mov ah, 02h
     mov dl, LF
-    int 21h
-
-
-    ; ======================================
-    ; FUNCION 09h - ETIQUETA DE TABLA
-    ; ======================================
-
-    mov ah, 09h
-    mov dx, etiqueta_tabla
     int 21h
 
 
@@ -145,34 +123,28 @@ main:
     ; RECORRER TABLA CON LOOP
     ; ======================================
 
-    ; SI apunta al inicio de la tabla
-    lea si, tabla_bytes
+    mov ah, 09h
+    mov dx, etiqueta_tabla
+    int 21h
 
-    ; Cantidad de elementos
+    lea si, tabla_bytes
     mov cx, ITERACIONES
 
 imprimir_tabla:
 
-    ; Leer el byte actual
     mov al, [si]
-
-    ; Convertir digito numerico a ASCII
     add al, 30h
 
-    ; Imprimir caracter
     mov ah, 02h
     mov dl, al
     int 21h
 
-    ; Imprimir espacio
+    ; Espacio entre elementos
     mov ah, 02h
     mov dl, 20h
     int 21h
 
-    ; Avanzar al siguiente elemento
     inc si
-
-    ; Repetir hasta que CX sea cero
     loop imprimir_tabla
 
 
@@ -198,7 +170,16 @@ imprimir_tabla:
 
 
     ; ======================================
-    ; FINALIZAR PROGRAMA
+    ; PASO 7: LINEA GENERADA CON TIMES
+    ; ======================================
+
+    mov ah, 09h
+    mov dx, linea_gruesa
+    int 21h
+
+
+    ; ======================================
+    ; TERMINAR PROGRAMA
     ; ======================================
 
     mov ax, 4C00h
